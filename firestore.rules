@@ -1,0 +1,33 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Soft-copy / contact claims submitted from the public card screen.
+    // Anyone can submit a claim (shape validated server-side); reads and
+    // edits are denied for all clients. Inspect submissions via the
+    // Firebase console.
+    match /claims/{claimId} {
+      function validClaim() {
+        let data = request.resource.data;
+        return data.keys().hasOnly(['name', 'email', 'phone', 'month', 'day', 'createdAt'])
+          && data.keys().hasAll(['name', 'email', 'month', 'day', 'createdAt'])
+          && data.name is string && data.name.size() >= 1 && data.name.size() <= 60
+          && data.email is string && data.email.size() >= 3 && data.email.size() <= 254
+          && data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+          && (!('phone' in data) || data.phone == null
+              || (data.phone is string && data.phone.size() >= 5 && data.phone.size() <= 20))
+          && data.month is int && data.month >= 1 && data.month <= 12
+          && data.day is int && data.day >= 1 && data.day <= 31
+          && data.createdAt == request.time;
+      }
+
+      allow create: if validClaim();
+    }
+
+    // Default deny anything else.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,1 @@
+export { FirestoreClaimRepository } from './FirestoreClaimRepository';

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Open devotional book — gold cover with cream pages, matches site palette -->
+  <path d="M3 7c4-2 9-2 13 1 4-3 9-3 13-1v19c-4-2-9-2-13 1-4-3-9-3-13-1V7z"
+        fill="#b08d4e"/>
+  <path d="M5 9c3-1.4 6.5-1.4 11 1.2 4.5-2.6 8-2.6 11-1.2v15c-3-1.4-6.5-1.4-11 1.2-4.5-2.6-8-2.6-11-1.2V9z"
+        fill="#f5f1ea"/>
+  <line x1="16" y1="10.2" x2="16" y2="26"
+        stroke="#b08d4e" stroke-width="1.4" stroke-linecap="round"/>
+</svg>
