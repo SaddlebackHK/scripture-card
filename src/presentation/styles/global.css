@@ -266,6 +266,18 @@ a:hover {
   margin-top: var(--space-2);
 }
 
+/* Short-height fallback — defensive: any .page-fit page falls back to
+   natural document scrolling when the viewport is too short to fit the
+   no-scroll layout. Currently applies to Landing in landscape on a phone
+   or a resized window. */
+@media (max-height: 640px) {
+  .page-fit {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+}
+
 @media (max-width: 720px) {
   .page {
     padding: 20px 18px 28px;
@@ -776,6 +788,39 @@ textarea.field-control {
   padding: 0 var(--space-2);
 }
 
+/* Landscape reflow — kicker / prompt / button stacked on the left, drum
+   pickers on the right. Applies whenever width > height, which covers
+   phone landscape, laptop landscape, kiosks mounted horizontally, and
+   ultrawide monitors. Portrait keeps the original centered stack. */
+@media (orientation: landscape) {
+  .landing-hero {
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      'kicker pickers'
+      'prompt pickers'
+      'button pickers';
+    justify-items: start;
+    align-items: center;
+    column-gap: var(--space-7);
+    row-gap: var(--space-3);
+  }
+  .landing-hero > .kicker {
+    grid-area: kicker;
+  }
+  .landing-hero > .landing-prompt {
+    grid-area: prompt;
+  }
+  .landing-hero > .landing-pickers {
+    grid-area: pickers;
+    align-self: center;
+  }
+  .landing-hero > .btn-solid {
+    grid-area: button;
+    margin-top: var(--space-4);
+  }
+}
+
 /* ─────────────────────────────────────────────────────────────
    Date tag — gold flag-shape used in the reading hero
    ───────────────────────────────────────────────────────────── */
@@ -1043,6 +1088,36 @@ textarea.field-control {
 
   .card-back-label {
     display: none;
+  }
+}
+
+/* Short-height fallback — phone in landscape (e.g., 844×390) or any
+   resized window below 640px tall. Tightens Card padding so the title /
+   verse / ref fit, switches the page to scroll mode with the bg image
+   as a fixed backdrop, and pins the back / action buttons to the viewport
+   corners so they remain reachable while scrolling. */
+@media (max-height: 640px) {
+  .card-screen {
+    height: auto;
+    min-height: 100dvh;
+    overflow-y: auto;
+  }
+
+  .card-screen-bg {
+    position: fixed;
+  }
+
+  .card-screen-content {
+    padding: clamp(36px, 8cqi, 96px) clamp(24px, 6cqi, 80px) clamp(72px, 14cqi, 140px);
+  }
+
+  .card-title {
+    margin-top: clamp(24px, 5cqi, 56px);
+  }
+
+  .card-back,
+  .card-screen-actions {
+    position: fixed;
   }
 }
 
