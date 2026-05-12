@@ -4,9 +4,6 @@ import { MONTHS, daysInMonth, formatChineseMonth } from '@shared/date';
 import { DrumPicker, PageFooter, PageHeader } from '@presentation/components';
 import { useViewport } from '@presentation/hooks';
 
-const clamp = (min: number, value: number, max: number): number =>
-  Math.max(min, Math.min(max, value));
-
 export const LandingPage = () => {
   const navigate = useNavigate();
   const today = new Date();
@@ -19,11 +16,10 @@ export const LandingPage = () => {
   const day = Math.min(requestedDay, daysInMonth(month));
   const days = Array.from({ length: daysInMonth(month) }, (_, i) => i + 1);
 
-  // Fluid DrumPicker dimensions — mirrors the CSS clamp(min, Xvmin, max) pattern
-  // used elsewhere, done in JS because DrumPicker's motion math needs numeric props.
-  const monthWidth = Math.round(clamp(92, vmin * 0.13, 180));
-  const dayWidth = Math.round(clamp(72, vmin * 0.1, 140));
-  const itemHeight = Math.round(clamp(48, vmin * 0.072, 88));
+  // Fluid DrumPicker dimensions — no upper bound so they scale proportionally with vmin.
+  const monthWidth = Math.round(Math.max(92, vmin * 0.15));
+  const dayWidth = Math.round(Math.max(72, vmin * 0.12));
+  const itemHeight = Math.round(Math.max(48, vmin * 0.085));
 
   const open = () => {
     void navigate(`/card/${String(month)}/${String(day)}`);
