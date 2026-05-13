@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { formatChineseDate } from '@shared/date';
 import { ClaimDialog, PageFooter, PageHeader } from '@presentation/components';
 import { useDayParams, useDevotional } from '@presentation/hooks';
-import cardBackground from '@presentation/assets/card-background.png';
+import cardBackground from '@presentation/assets/bg.png';
 
 export const CardPage = () => {
   const params = useDayParams();

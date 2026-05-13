@@ -857,6 +857,14 @@ textarea.field-control {
   overflow: hidden;
   background: var(--paper);
   container-type: inline-size;
+  /* Smoothly animates into/out of pillarbox mode when the viewport
+     crosses the image aspect-ratio threshold. */
+  transition:
+    width 560ms cubic-bezier(0.25, 1, 0.5, 1),
+    height 560ms cubic-bezier(0.25, 1, 0.5, 1),
+    margin 560ms cubic-bezier(0.25, 1, 0.5, 1),
+    border-radius 460ms ease,
+    box-shadow 460ms ease;
 }
 
 .card-screen-bg {
@@ -877,21 +885,21 @@ textarea.field-control {
    query at the bottom of the section). */
 .card-back {
   position: absolute;
-  top: max(var(--space-4), 2vmin);
-  left: max(var(--space-4), 2vmin);
+  top: max(var(--space-4), 3.74cqi);
+  left: max(var(--space-4), 3.74cqi);
   z-index: 3;
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  min-height: max(48px, 6vmin);
-  min-width: max(48px, 6vmin);
-  padding: max(12px, 1.4vmin) max(22px, 2.4vmin);
+  min-height: max(48px, 11.21cqi);
+  min-width: max(48px, 11.21cqi);
+  padding: max(12px, 2.80cqi) max(22px, 5.14cqi);
   background: rgba(245, 241, 234, 0.7);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(20, 14, 8, 0.08);
   border-radius: var(--radius-pill);
-  font-size: max(12px, 1.4vmin);
+  font-size: max(12px, 2.80cqi);
   letter-spacing: 0.22em;
   color: var(--ink-2);
   text-decoration: none;
@@ -903,8 +911,12 @@ textarea.field-control {
 
 .card-back-icon {
   display: inline-flex;
-  font-size: max(16px, 1.8vmin);
   line-height: 1;
+}
+
+.card-back-icon svg {
+  width: max(18px, 4.21cqi);
+  height: max(18px, 4.21cqi);
 }
 
 .card-back-label {
@@ -939,23 +951,26 @@ textarea.field-control {
   align-items: center;
   justify-content: flex-start;
   text-align: center;
-  /* Bottom padding leaves the lower band of the photo (the Saddleback
-     wordmark) clear of typography. The bottom-right action cluster is
-     absolute-positioned and never crosses center. */
-  padding: clamp(72px, 11cqi, 160px) clamp(24px, 6cqi, 80px) clamp(140px, 18cqi, 240px);
+  /* Top padding positions the date ~28–30 % of card width from the top,
+     matching the reference layout where the date sits in the upper-sky zone.
+     Bottom padding keeps all text above the Saddleback wordmark baked into
+     the lower portion of the background image. */
+  padding: max(80px, 28cqi) max(24px, 6cqi) max(120px, 30cqi);
   color: #1a1410;
 }
 
 .card-date {
   margin: 0;
-  font-size: clamp(18px, 3cqi, 56px);
+  font-size: max(16px, 4cqi);
   letter-spacing: 0.06em;
   line-height: 1;
 }
 
 .card-title {
-  margin: clamp(48px, 9cqi, 96px) 0 0;
-  font-size: clamp(36px, 7.4cqi, 140px);
+  /* Large gap between date and title recreates the dramatic sky-breathing
+     space visible in the reference layout. */
+  margin: max(48px, 20cqi) 0 0;
+  font-size: max(32px, 9.5cqi);
   line-height: 1.18;
   letter-spacing: 0.03em;
   font-weight: 400;
@@ -963,19 +978,19 @@ textarea.field-control {
 }
 
 .card-verse {
-  margin: clamp(24px, 4cqi, 48px) auto 0;
+  margin: max(20px, 5cqi) auto 0;
   font-family: 'Noto Serif TC', 'Songti TC', serif;
-  font-size: clamp(15px, 2cqi, 32px);
+  font-size: max(14px, 3.8cqi);
   line-height: 1.75;
   color: #2e2620;
-  max-width: clamp(480px, 60cqi, 880px);
+  max-width: max(280px, 88cqi);
   text-wrap: pretty;
 }
 
 .card-ref {
-  margin: clamp(16px, 2.4cqi, 28px) 0 0;
+  margin: max(12px, 2.5cqi) 0 0;
   font-family: 'Noto Serif TC', 'Songti TC', serif;
-  font-size: clamp(12px, 1.4cqi, 26px);
+  font-size: max(11px, 2.5cqi);
   letter-spacing: 0.08em;
   color: #4a3e30;
 }
@@ -987,13 +1002,13 @@ textarea.field-control {
    stack with consistent gap between them. */
 .card-screen-actions {
   position: absolute;
-  bottom: max(var(--space-5), 2.5vmin);
-  right: max(var(--space-5), 2.5vmin);
+  bottom: max(var(--space-5), 5.61cqi);
+  right: max(var(--space-5), 5.61cqi);
   z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: max(var(--space-3), 1.5vmin);
+  gap: max(var(--space-3), 2.80cqi);
 }
 
 /* Toast — surfaces "已複製" feedback at the bottom-center of the
@@ -1002,9 +1017,9 @@ textarea.field-control {
    light photo regardless of theme. Auto-dismissed by React state
    after 2s; entrance animates from below. */
 .card-action-btn {
-  width: max(48px, 6vmin);
-  height: max(48px, 6vmin);
-  min-height: max(48px, 6vmin);
+  width: max(48px, 11.21cqi);
+  height: max(48px, 11.21cqi);
+  min-height: max(48px, 11.21cqi);
   padding: 0;
   display: inline-flex;
   align-items: center;
@@ -1022,6 +1037,11 @@ textarea.field-control {
     background 200ms ease,
     color 200ms ease,
     border-color 200ms ease;
+}
+
+.card-action-btn svg {
+  width: max(18px, 4.21cqi);
+  height: max(18px, 4.21cqi);
 }
 
 .card-action-btn:hover {
@@ -1047,7 +1067,7 @@ textarea.field-control {
    labeled pill on wide screens, icon-only square on phones. */
 @media (max-width: 720px) {
   .card-back {
-    padding: 14px;
+    padding: max(14px, 3.27cqi);
     gap: 0;
     justify-content: center;
   }
@@ -1064,6 +1084,7 @@ textarea.field-control {
    corners so they remain reachable while scrolling. */
 @media (max-height: 640px) {
   .card-screen {
+    transition: none;
     height: auto;
     min-height: 100dvh;
     overflow-y: auto;
@@ -1074,16 +1095,39 @@ textarea.field-control {
   }
 
   .card-screen-content {
-    padding: clamp(36px, 8cqi, 96px) clamp(24px, 6cqi, 80px) clamp(72px, 14cqi, 140px);
+    padding: max(36px, 12cqi) max(24px, 6cqi) max(72px, 16cqi);
   }
 
   .card-title {
-    margin-top: clamp(24px, 5cqi, 56px);
+    margin-top: max(20px, 10cqi);
   }
 
   .card-back,
   .card-screen-actions {
     position: fixed;
+  }
+}
+
+/* Pillarbox mode — triggered when the viewport is wider than bg.png's native
+   aspect ratio (14872 × 21056). Beyond that point, object-fit: cover would
+   start cropping the image vertically. Instead we inset the card on all sides
+   so the full photo is always visible and the card floats in the viewport.
+   --pillarbox-m drives both the vertical inset and the derived card width so
+   all four margins stay equal and scale together with viewport height.
+   The cqi-based font sizes scale naturally with the now-constrained card width.
+   min-height: 641px keeps this from conflicting with the landscape fallback. */
+@media (min-aspect-ratio: 14872 / 21056) and (min-height: 641px) {
+  .card-screen {
+    --pillarbox-m: max(24px, 3dvh);
+    min-height: 0;
+    height: calc(100dvh - 2 * var(--pillarbox-m));
+    width: calc((100dvh - 2 * var(--pillarbox-m)) * 14872 / 21056);
+    margin: var(--pillarbox-m) auto;
+    border-radius: max(16px, 2dvh);
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.06),
+      0 8px 40px rgba(0, 0, 0, 0.18),
+      0 32px 80px rgba(0, 0, 0, 0.10);
   }
 }
 
@@ -1118,7 +1162,7 @@ textarea.field-control {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: max(var(--space-4), 2vmin);
+  padding: max(var(--space-4), 3.74cqi);
   z-index: 100;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -1147,11 +1191,11 @@ textarea.field-control {
      iOS keyboard reduces available height. No max-height / overflow
      on the card itself, so iOS handles scroll-into-view cleanly. */
   margin: auto 0;
-  max-width: clamp(380px, 41vw, 760px);
-  padding: max(var(--space-7), 5vmin) max(var(--space-5), 3vmin) max(var(--space-5), 3vmin);
+  max-width: max(380px, 88.8cqi);
+  padding: max(var(--space-7), 11.21cqi) max(var(--space-5), 5.61cqi);
   display: flex;
   flex-direction: column;
-  gap: max(var(--space-5), 3vmin);
+  gap: max(var(--space-5), 5.61cqi);
   border-radius: var(--radius-lg);
   /* Override the sharp .surface defaults with a softer, more diffused
      shadow so the dialog reads as a floating object rather than a
@@ -1181,10 +1225,10 @@ textarea.field-control {
 
 .dialog-close {
   position: absolute;
-  top: max(var(--space-3), 1.5vmin);
-  right: max(var(--space-3), 1.5vmin);
-  width: max(40px, 4vmin);
-  height: max(40px, 4vmin);
+  top: max(var(--space-3), 2.80cqi);
+  right: max(var(--space-3), 2.80cqi);
+  width: max(40px, 9.35cqi);
+  height: max(40px, 9.35cqi);
   border: none;
   background: transparent;
   color: var(--ink-3);
@@ -1195,6 +1239,11 @@ textarea.field-control {
   transition:
     background 200ms ease,
     color 200ms ease;
+}
+
+.dialog-close svg {
+  width: max(18px, 4.21cqi);
+  height: max(18px, 4.21cqi);
 }
 
 .dialog-close:hover {
@@ -1210,7 +1259,7 @@ textarea.field-control {
 
 .dialog-title {
   margin: 0;
-  font-size: max(22px, 2.5vmin);
+  font-size: max(22px, 5.14cqi);
   font-weight: 500;
   letter-spacing: 0.02em;
   color: var(--ink);
@@ -1218,7 +1267,7 @@ textarea.field-control {
 
 .dialog-subtitle {
   margin: 0;
-  font-size: max(14px, 1.4vmin);
+  font-size: max(14px, 3.27cqi);
   line-height: 1.7;
   color: var(--ink-3);
 }
@@ -1231,7 +1280,7 @@ textarea.field-control {
 /* Slightly larger radius + soft focus glow inside the dialog. */
 .dialog-card .field-control {
   border-radius: var(--radius-md);
-  padding: 14px 16px;
+  padding: max(14px, 3.27cqi) max(16px, 3.74cqi);
   background: var(--paper);
   transition:
     border-color 200ms ease,
@@ -1257,7 +1306,7 @@ textarea.field-control {
 
 .dialog-privacy {
   margin: 0;
-  font-size: max(12px, 1.2vmin);
+  font-size: max(12px, 2.80cqi);
   letter-spacing: 0.04em;
   color: var(--ink-mute);
   line-height: 1.7;
@@ -1267,7 +1316,8 @@ textarea.field-control {
 /* Slightly tighter padding for dialog CTAs (the pill radius is global). */
 .dialog-card .btn-solid,
 .dialog-card .btn-outline {
-  padding: max(14px, 1.5vmin) max(32px, 3.5vmin);
+  padding: max(14px, 3.27cqi) max(32px, 7.48cqi);
+  font-size: max(13px, 3.04cqi);
   letter-spacing: 0.28em;
 }
 
@@ -1280,6 +1330,18 @@ textarea.field-control {
   border-radius: var(--radius-md);
 }
 
+.dialog-card .kicker {
+  font-size: max(13px, 3.04cqi);
+}
+
+.dialog-card .field-label {
+  font-size: max(11px, 2.57cqi);
+}
+
+.dialog-card .banner {
+  font-size: max(13px, 3.04cqi);
+}
+
 .dialog-success {
   display: grid;
   gap: var(--space-3);
@@ -1289,8 +1351,8 @@ textarea.field-control {
 
 .dialog-success-mark {
   margin: 0 auto;
-  width: max(64px, 6vmin);
-  height: max(64px, 6vmin);
+  width: max(64px, 14.95cqi);
+  height: max(64px, 14.95cqi);
   border-radius: 50%;
   border: 1px solid var(--gold);
   background: rgba(176, 141, 78, 0.08);
@@ -1299,9 +1361,14 @@ textarea.field-control {
   place-items: center;
 }
 
+.dialog-success-mark svg {
+  width: max(28px, 6.54cqi);
+  height: max(28px, 6.54cqi);
+}
+
 .dialog-success-text {
   margin: 0;
-  font-size: 15px;
+  font-size: max(15px, 3.50cqi);
   line-height: 1.8;
   color: var(--ink-2);
 }
@@ -1310,7 +1377,7 @@ textarea.field-control {
   display: inline-block;
   margin-top: var(--space-2);
   font-family: 'Cormorant Garamond', serif;
-  font-size: 17px;
+  font-size: max(17px, 3.97cqi);
   color: var(--gold-deep);
   letter-spacing: 0.04em;
 }
