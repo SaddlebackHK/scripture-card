@@ -1129,6 +1129,28 @@ textarea.field-control {
       0 8px 40px rgba(0, 0, 0, 0.18),
       0 32px 80px rgba(0, 0, 0, 0.10);
   }
+
+  .card-screen-content {
+    padding-top: max(70px, 25cqi);
+  }
+
+  .card-date {
+    font-size: max(14px, 3.6cqi);
+  }
+
+  .card-title {
+    font-size: max(26px, 6.5cqi);
+    letter-spacing: 0.04em;
+  }
+
+  .card-verse {
+    font-size: max(14px, 2.7cqi);
+    letter-spacing: 0.05em;
+  }
+
+  .card-ref {
+    margin-top: max(24px, 8cqi);
+  }
 }
 
 .card-error-banner {
