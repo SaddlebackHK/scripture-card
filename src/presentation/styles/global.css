@@ -1472,18 +1472,13 @@ textarea.field-control {
   color: var(--ink-3);
 }
 
-/* Forces "發送給你。" onto its own line when the dialog is wide enough to
-   otherwise fit the whole subtitle on a single row. On narrow portrait
-   phones the line wraps naturally — adding our own break there would just
-   create awkward double-wrapping, so we suppress it. */
-.dialog-subtitle-break {
-  display: none;
-}
-
-@media (min-width: 480px) {
-  .dialog-subtitle-break {
-    display: initial;
-  }
+/* Keeps "發送給你。" together as an atomic phrase. The browser leaves it on
+   the same line when there's room; when the sentence needs to wrap, the
+   whole verb falls to the next line at a semantic boundary instead of
+   mid-phrase. No forced break, so narrow screens still wrap naturally
+   without the triple-line stack a hard <br> would cause. */
+.dialog-subtitle-action {
+  white-space: nowrap;
 }
 
 .dialog-form {
