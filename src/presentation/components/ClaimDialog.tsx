@@ -1,4 +1,5 @@
 import { type FormEvent, type MouseEvent, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Check, X } from 'lucide-react';
 import { useContainer } from '@presentation/hooks';
 import { dispatchUseCase } from '@presentation/utils';
@@ -77,7 +78,13 @@ const ClaimDialogContent = ({ month, day, dateLabel, onClose }: ClaimDialogProps
     event.stopPropagation();
   };
 
-  return (
+  // Portal the dialog to <body>. CardPage's <main className="card-screen">
+  // sets container-type: inline-size, which establishes a containing block
+  // for position: fixed descendants — so a dialog rendered inside it would
+  // be visually trapped within the pillarboxed card on wide-short windows.
+  // Rendering to <body> escapes the containment context and lets the
+  // backdrop / dialog size against the actual viewport.
+  return createPortal(
     <div className="dialog-backdrop" onClick={onClose} role="presentation">
       <div
         className="dialog-card surface"
@@ -180,6 +187,7 @@ const ClaimDialogContent = ({ month, day, dateLabel, onClose }: ClaimDialogProps
           </>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
