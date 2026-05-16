@@ -1345,9 +1345,11 @@ textarea.field-control {
   align-items: center;
   /* Backdrop gutter scales with vmin (not the cqi of the pillarboxed
      .card-screen behind it) so a wide-short laptop window doesn't get
-     a cramped dialog stamped into the narrow card pillar. */
+     a cramped dialog stamped into the narrow card pillar. The 20px
+     floor guarantees a visible top/bottom margin so the dialog never
+     crowds the viewport edge, even on the shortest landscape phones. */
   padding: 24px; /* Chrome <79 fallback */
-  padding: clamp(16px, 3vmin, 32px);
+  padding: clamp(20px, 3vmin, 36px);
   z-index: 100;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -1605,6 +1607,43 @@ textarea.field-control {
 .dialog-done {
   width: 100%;
   margin-top: var(--space-3);
+}
+
+/* Compact mode for short viewports (landscape phones, resized laptop
+   windows). Tightens internal padding / gaps so the whole 3-field form
+   plus its header and submit button fits one viewport tall, sparing the
+   user from scrolling the form while typing. Touch targets and the
+   16px iOS-anti-zoom input font are preserved — we trim padding, not
+   the tap zone itself. */
+@media (max-height: 720px) {
+  .dialog-card {
+    padding: 20px 24px;
+    gap: 14px;
+  }
+
+  .dialog-header {
+    gap: 6px;
+  }
+
+  .dialog-subtitle {
+    line-height: 1.55;
+  }
+
+  .dialog-form {
+    gap: 12px;
+  }
+
+  .dialog-card .field {
+    gap: 6px;
+  }
+
+  .dialog-card .field-control {
+    padding: 10px 14px;
+  }
+
+  .dialog-submit {
+    margin-top: 0;
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────
