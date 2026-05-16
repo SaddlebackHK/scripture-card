@@ -104,18 +104,28 @@ body {
   overflow-x: hidden;
 }
 
-/* Subtle paper texture */
+/* Subtle paper texture. Chrome <79 fallbacks use fixed px values; the
+   texture is decorative so the slight visual difference is acceptable. */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
   background-image:
+    radial-gradient(rgba(120, 90, 50, 0.035) 1px, transparent 1px),
+    radial-gradient(rgba(120, 90, 50, 0.025) 1px, transparent 1px);
+  background-image:
     radial-gradient(rgba(120, 90, 50, 0.035) max(1px, 0.22vmin), transparent max(1px, 0.22vmin)),
     radial-gradient(rgba(120, 90, 50, 0.025) max(1px, 0.22vmin), transparent max(1px, 0.22vmin));
   background-size:
+    3px 3px,
+    7px 7px;
+  background-size:
     max(3px, 0.67vmin) max(3px, 0.67vmin),
     max(7px, 1.57vmin) max(7px, 1.57vmin);
+  background-position:
+    0 0,
+    1px 2px;
   background-position:
     0 0,
     max(1px, 0.22vmin) max(2px, 0.45vmin);
@@ -124,6 +134,9 @@ body::before {
 }
 
 [data-theme='dark'] body::before {
+  background-image:
+    radial-gradient(rgba(217, 186, 130, 0.04) 1px, transparent 1px),
+    radial-gradient(rgba(217, 186, 130, 0.025) 1px, transparent 1px);
   background-image:
     radial-gradient(rgba(217, 186, 130, 0.04) max(1px, 0.22vmin), transparent max(1px, 0.22vmin)),
     radial-gradient(rgba(217, 186, 130, 0.025) max(1px, 0.22vmin), transparent max(1px, 0.22vmin));
@@ -154,6 +167,7 @@ body::before {
 
 .kicker {
   font-family: 'Cormorant Garamond', serif;
+  font-size: 13px; /* Chrome <79 fallback */
   font-size: max(13px, 1.8vmin);
   letter-spacing: 0.45em;
   text-transform: uppercase;
@@ -244,6 +258,7 @@ a:hover {
   min-height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr auto;
+  padding: 20px 28px 28px; /* Chrome <79 fallback */
   padding: max(20px, 4vmin) max(28px, 5vmin) max(28px, 5vmin);
 }
 
@@ -251,10 +266,13 @@ a:hover {
    used for kiosk / large-touchscreen flows where every interactive element
    has to be reachable without a scroll. */
 .page-fit {
+  height: 100vh; /* Chrome <108 fallback */
   height: 100dvh;
   min-height: 0;
   overflow: hidden;
+  padding-top: 20px; /* Chrome <79 fallback */
   padding-top: max(20px, 4vmin);
+  padding-bottom: 20px; /* Chrome <79 fallback */
   padding-bottom: max(20px, 4vmin);
 }
 
@@ -263,6 +281,7 @@ a:hover {
 }
 
 .page-fit .page-footer {
+  margin-top: var(--space-2); /* Chrome <79 fallback */
   margin-top: max(var(--space-2), 1.5vmin);
 }
 
@@ -273,6 +292,7 @@ a:hover {
 @media (max-height: 640px) {
   .page-fit {
     height: auto;
+    min-height: 100vh; /* Chrome <108 fallback */
     min-height: 100dvh;
     overflow: visible;
   }
@@ -289,6 +309,7 @@ a:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px; /* Chrome <79 fallback */
   gap: max(16px, 2.5vmin);
   width: 100%;
   margin: 0 auto;
@@ -304,6 +325,7 @@ a:hover {
 .brand {
   display: inline-flex;
   align-items: center;
+  gap: 14px; /* Chrome <79 fallback */
   gap: max(14px, 2vmin);
   color: var(--ink-3);
   text-decoration: none;
@@ -315,18 +337,22 @@ a:hover {
 }
 
 .brand-mark {
+  width: 28px; /* Chrome <79 fallback */
   width: max(28px, 3.5vmin);
+  height: 28px;
   height: max(28px, 3.5vmin);
   border-radius: 50%;
   border: 1px solid var(--gold);
   display: grid;
   place-items: center;
   font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
   font-size: max(13px, 1.5vmin);
   color: var(--gold);
 }
 
 .brand-name {
+  font-size: 13px; /* Chrome <79 fallback */
   font-size: max(13px, 1.5vmin);
   letter-spacing: 0.32em;
   color: var(--ink-3);
@@ -335,6 +361,7 @@ a:hover {
 .top-bar-tools {
   display: inline-flex;
   align-items: center;
+  gap: 8px; /* Chrome <79 fallback */
   gap: max(8px, 1.2vmin);
 }
 
@@ -344,7 +371,9 @@ a:hover {
   border: 1px solid var(--rule);
   color: var(--ink-3);
   border-radius: var(--radius-pill);
+  padding: 8px 16px; /* Chrome <79 fallback */
   padding: max(8px, 1vmin) max(16px, 2vmin);
+  font-size: 12px;
   font-size: max(12px, 1.4vmin);
   letter-spacing: 0.18em;
   transition:
@@ -354,6 +383,7 @@ a:hover {
   text-decoration: none;
   display: inline-flex;
   align-items: center;
+  gap: 6px;
   gap: max(6px, 0.8vmin);
 }
 
@@ -370,6 +400,7 @@ a:hover {
 
 /* Square icon variant of .pill (e.g. theme toggle) */
 .pill-icon {
+  padding: 8px; /* Chrome <79 fallback */
   padding: max(8px, 1vmin);
   letter-spacing: 0;
   line-height: 0;
@@ -380,7 +411,9 @@ a:hover {
   background: var(--ink);
   color: var(--paper);
   border: none;
+  padding: 16px 38px; /* Chrome <79 fallback */
   padding: max(16px, 2vmin) max(38px, 5vmin);
+  font-size: 13px;
   font-size: max(13px, 1.6vmin);
   letter-spacing: 0.32em;
   font-family: inherit;
@@ -450,10 +483,13 @@ a:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px; /* Chrome <79 fallback (var(--space-3) = 12px) */
   gap: max(var(--space-3), 1.5vmin);
   width: 100%;
+  margin: 12px auto 0;
   margin: max(var(--space-3), 1.5vmin) auto 0;
   padding: 0;
+  font-size: 11px;
   font-size: max(11px, 1.3vmin);
   line-height: 1.3;
   letter-spacing: 0.22em;
@@ -474,6 +510,7 @@ a:hover {
 
 /* Section heading */
 .section-title {
+  font-size: 32px; /* Chrome <79 fallback (mid-range of the clamp) */
   font-size: clamp(28px, 4vw, 40px);
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -635,6 +672,7 @@ textarea.field-control {
      A unified font keeps the wheel visually consistent whether the item
      is `1` or `十一月`. */
   font-family: 'Noto Serif TC', 'Cormorant Garamond', 'Songti TC', serif;
+  font-size: 22px; /* Chrome <79 fallback */
   font-size: max(22px, 3.5vmin);
   font-weight: 400;
   color: var(--ink-mute);
@@ -758,13 +796,16 @@ textarea.field-control {
 
 .landing-hero {
   width: 100%;
+  max-width: 560px; /* Chrome <79 fallback (multi-arg max unsupported) */
   max-width: max(560px, 70vmin, 50.4vw);
   display: grid;
   justify-items: center;
+  gap: 24px; /* Chrome <79 fallback (var(--space-5) = 24px) */
   gap: max(var(--space-5), 4.5vmin);
 }
 
 .landing-prompt {
+  font-size: 15px; /* Chrome <79 fallback */
   font-size: max(15px, 2.5vmin);
   letter-spacing: 0.32em;
   color: var(--ink-3);
@@ -774,15 +815,20 @@ textarea.field-control {
 .landing-pickers {
   display: inline-flex;
   align-items: center;
+  gap: 8px; /* Chrome <79 fallback (var(--space-2) = 8px) */
   gap: max(var(--space-2), 1.2vmin);
+  padding: 8px 24px;
   padding: max(var(--space-2), 1.2vmin) max(var(--space-5), 4vmin);
+  border-radius: 4px; /* Chrome <79 fallback (var(--radius-xs) = 4px) */
   border-radius: max(var(--radius-xs), 0.6vmin);
 }
 
 .landing-pickers-sep {
   font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; /* Chrome <79 fallback */
   font-size: max(22px, 3.5vmin);
   color: var(--gold);
+  padding: 0 8px;
   padding: 0 max(var(--space-2), 1.2vmin);
 }
 
@@ -852,7 +898,9 @@ textarea.field-control {
 .card-screen {
   position: relative;
   width: 100vw;
+  height: 100vh; /* Chrome <108 fallback (no dvh support) */
   height: 100dvh;
+  min-height: 100vh; /* Chrome <108 fallback */
   min-height: 100dvh;
   overflow: hidden;
   background: var(--paper);
@@ -885,20 +933,27 @@ textarea.field-control {
    query at the bottom of the section). */
 .card-back {
   position: absolute;
+  /* Chrome <79/<105 fallbacks: vw≈cqi inside .card-screen (width: 100vw). */
+  top: 3.74vw;
   top: max(var(--space-4), 3.74cqi);
+  left: 3.74vw;
   left: max(var(--space-4), 3.74cqi);
   z-index: 3;
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
+  min-height: 48px;
   min-height: max(48px, 11.21cqi);
+  min-width: 48px;
   min-width: max(48px, 11.21cqi);
+  padding: 12px 22px;
   padding: max(12px, 2.80cqi) max(22px, 5.14cqi);
   background: rgba(245, 241, 234, 0.7);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(20, 14, 8, 0.08);
   border-radius: var(--radius-pill);
+  font-size: 2.80vw;
   font-size: max(12px, 2.80cqi);
   letter-spacing: 0.22em;
   color: var(--ink-2);
@@ -915,7 +970,9 @@ textarea.field-control {
 }
 
 .card-back-icon svg {
+  width: 18px;
   width: max(18px, 4.21cqi);
+  height: 18px;
   height: max(18px, 4.21cqi);
 }
 
@@ -954,13 +1011,16 @@ textarea.field-control {
   /* Top padding positions the date ~28–30 % of card width from the top,
      matching the reference layout where the date sits in the upper-sky zone.
      Bottom padding keeps all text above the Saddleback wordmark baked into
-     the lower portion of the background image. */
+     the lower portion of the background image.
+     Chrome <79/<105 fallbacks: vw≈cqi here since .card-screen is 100vw wide. */
+  padding: 28vw 6vw 30vw;
   padding: max(80px, 28cqi) max(24px, 6cqi) max(120px, 30cqi);
   color: #1a1410;
 }
 
 .card-date {
   margin: 0;
+  font-size: 4vw; /* Chrome <79/<105 fallback */
   font-size: max(16px, 4cqi);
   letter-spacing: 0.06em;
   line-height: 1;
@@ -969,7 +1029,9 @@ textarea.field-control {
 .card-title {
   /* Large gap between date and title recreates the dramatic sky-breathing
      space visible in the reference layout. */
+  margin: 20vw 0 0; /* Chrome <79/<105 fallback */
   margin: max(48px, 20cqi) 0 0;
+  font-size: 9.5vw; /* Chrome <79/<105 fallback */
   font-size: max(32px, 9.5cqi);
   line-height: 1.18;
   letter-spacing: 0.03em;
@@ -978,18 +1040,23 @@ textarea.field-control {
 }
 
 .card-verse {
+  margin: 5vw auto 0; /* Chrome <79/<105 fallback */
   margin: max(20px, 5cqi) auto 0;
   font-family: 'Noto Serif TC', 'Songti TC', serif;
+  font-size: 3.8vw; /* Chrome <79/<105 fallback */
   font-size: max(14px, 3.8cqi);
   line-height: 1.75;
   color: #2e2620;
+  max-width: 88vw; /* Chrome <79/<105 fallback */
   max-width: max(280px, 88cqi);
   text-wrap: pretty;
 }
 
 .card-ref {
+  margin: 2.5vw 0 0; /* Chrome <79/<105 fallback */
   margin: max(12px, 2.5cqi) 0 0;
   font-family: 'Noto Serif TC', 'Songti TC', serif;
+  font-size: 2.5vw; /* Chrome <79/<105 fallback */
   font-size: max(11px, 2.5cqi);
   letter-spacing: 0.08em;
   color: #4a3e30;
@@ -1002,12 +1069,15 @@ textarea.field-control {
    stack with consistent gap between them. */
 .card-screen-actions {
   position: absolute;
+  bottom: 5.61vw; /* Chrome <79/<105 fallback */
   bottom: max(var(--space-5), 5.61cqi);
+  right: 5.61vw;
   right: max(var(--space-5), 5.61cqi);
   z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  gap: 2.80vw;
   gap: max(var(--space-3), 2.80cqi);
 }
 
@@ -1017,8 +1087,11 @@ textarea.field-control {
    light photo regardless of theme. Auto-dismissed by React state
    after 2s; entrance animates from below. */
 .card-action-btn {
+  width: 48px; /* Chrome <79 fallback */
   width: max(48px, 11.21cqi);
+  height: 48px;
   height: max(48px, 11.21cqi);
+  min-height: 48px;
   min-height: max(48px, 11.21cqi);
   padding: 0;
   display: inline-flex;
@@ -1040,7 +1113,9 @@ textarea.field-control {
 }
 
 .card-action-btn svg {
+  width: 18px; /* Chrome <79 fallback */
   width: max(18px, 4.21cqi);
+  height: 18px;
   height: max(18px, 4.21cqi);
 }
 
@@ -1067,6 +1142,7 @@ textarea.field-control {
    labeled pill on wide screens, icon-only square on phones. */
 @media (max-width: 720px) {
   .card-back {
+    padding: 14px; /* Chrome <79 fallback */
     padding: max(14px, 3.27cqi);
     gap: 0;
     justify-content: center;
@@ -1086,6 +1162,7 @@ textarea.field-control {
   .card-screen {
     transition: none;
     height: auto;
+    min-height: 100vh; /* Chrome <108 fallback */
     min-height: 100dvh;
     overflow-y: auto;
   }
@@ -1095,10 +1172,12 @@ textarea.field-control {
   }
 
   .card-screen-content {
+    padding: 12vw 6vw 16vw; /* Chrome <79/<105 fallback */
     padding: max(36px, 12cqi) max(24px, 6cqi) max(72px, 16cqi);
   }
 
   .card-title {
+    margin-top: 10vw; /* Chrome <79/<105 fallback */
     margin-top: max(20px, 10cqi);
   }
 
@@ -1114,15 +1193,20 @@ textarea.field-control {
    so the full photo is always visible and the card floats in the viewport.
    --pillarbox-m drives both the vertical inset and the derived card width so
    all four margins stay equal and scale together with viewport height.
-   The cqi-based font sizes scale naturally with the now-constrained card width.
-   min-height: 641px keeps this from conflicting with the landscape fallback. */
-@media (min-aspect-ratio: 14872 / 21056) and (min-height: 641px) {
+   The cqi-based font sizes scale naturally with the now-constrained card width. */
+@media (min-aspect-ratio: 14872 / 21056) {
   .card-screen {
+    /* Chrome <79 + <108 fallback: fixed 24px inset, vh-based calc. */
+    --pillarbox-m: 3vh;
     --pillarbox-m: max(24px, 3dvh);
     min-height: 0;
+    height: calc(100vh - 48px); /* Chrome <79 fallback */
     height: calc(100dvh - 2 * var(--pillarbox-m));
+    width: calc((100vh - 48px) * 14872 / 21056); /* Chrome <79 fallback */
     width: calc((100dvh - 2 * var(--pillarbox-m)) * 14872 / 21056);
+    margin: 24px auto; /* Chrome <79 fallback */
     margin: var(--pillarbox-m) auto;
+    border-radius: 16px; /* Chrome <79 fallback */
     border-radius: max(16px, 2dvh);
     box-shadow:
       0 0 0 1px rgba(0, 0, 0, 0.06),
@@ -1130,26 +1214,101 @@ textarea.field-control {
       0 32px 80px rgba(0, 0, 0, 0.10);
   }
 
+  /* Pillarbox is desktop / landscape — cursor input is expected — so the
+     48px tap-target px floors from the default rules can give way to pure
+     cqi sizing. Without dropping them, text and chrome freeze at phone
+     sizes once viewport height drops below ~730px while the photo around
+     them keeps shrinking, which breaks the composition. */
   .card-screen-content {
-    padding-top: max(70px, 25cqi);
+    padding: 25vw 6vw 30vw; /* Chrome <79/<105 fallback */
+    padding: 25cqi 6cqi 30cqi;
   }
 
   .card-date {
-    font-size: max(14px, 3.6cqi);
+    font-size: 3.6vw; /* Chrome <79/<105 fallback */
+    font-size: 3.6cqi;
   }
 
   .card-title {
-    font-size: max(26px, 6.5cqi);
+    font-size: 6.5vw; /* Chrome <79/<105 fallback */
+    font-size: 6.5cqi;
     letter-spacing: 0.04em;
   }
 
   .card-verse {
-    font-size: max(14px, 2.7cqi);
+    font-size: 2.7vw; /* Chrome <79/<105 fallback */
+    font-size: 2.7cqi;
     letter-spacing: 0.05em;
   }
 
   .card-ref {
-    margin-top: max(24px, 8cqi);
+    margin-top: 8vw; /* Chrome <79/<105 fallback */
+    margin-top: 8cqi;
+    font-size: 2.5vw; /* Chrome <79/<105 fallback */
+    font-size: 2.5cqi;
+  }
+
+  .card-back {
+    top: 3.74vw; /* Chrome <79/<105 fallback */
+    top: 3.74cqi;
+    left: 3.74vw;
+    left: 3.74cqi;
+    min-height: 11.21vw;
+    min-height: 11.21cqi;
+    min-width: 11.21vw;
+    min-width: 11.21cqi;
+    padding: 2.80vw 5.14vw;
+    padding: 2.80cqi 5.14cqi;
+    font-size: 2.80vw;
+    font-size: 2.80cqi;
+  }
+
+  .card-back-icon svg {
+    width: 4.21vw; /* Chrome <79/<105 fallback */
+    width: 4.21cqi;
+    height: 4.21vw;
+    height: 4.21cqi;
+  }
+
+  .card-screen-actions {
+    bottom: 5.61vw; /* Chrome <79/<105 fallback */
+    bottom: 5.61cqi;
+    right: 5.61vw;
+    right: 5.61cqi;
+    gap: 2.80vw;
+    gap: 2.80cqi;
+  }
+
+  .card-action-btn {
+    width: 11.21vw; /* Chrome <79/<105 fallback */
+    width: 11.21cqi;
+    height: 11.21vw;
+    height: 11.21cqi;
+    min-height: 11.21vw;
+    min-height: 11.21cqi;
+  }
+
+  .card-action-btn svg {
+    width: 4.21vw; /* Chrome <79/<105 fallback */
+    width: 4.21cqi;
+    height: 4.21vw;
+    height: 4.21cqi;
+  }
+
+  /* Narrow pillarboxed card (short viewport) → collapse the back pill to
+     icon-only, same shape as the default @media (max-width: 720px) rule
+     does for narrow viewports, but keyed to the card's own width. */
+  @container (max-width: 480px) {
+    .card-back-label {
+      display: none;
+    }
+
+    .card-back {
+      padding: 3.27vw; /* Chrome <79/<105 fallback */
+      padding: 3.27cqi;
+      gap: 0;
+      justify-content: center;
+    }
   }
 }
 
@@ -1184,7 +1343,11 @@ textarea.field-control {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: max(var(--space-4), 3.74cqi);
+  /* Backdrop gutter scales with vmin (not the cqi of the pillarboxed
+     .card-screen behind it) so a wide-short laptop window doesn't get
+     a cramped dialog stamped into the narrow card pillar. */
+  padding: 24px; /* Chrome <79 fallback */
+  padding: clamp(16px, 3vmin, 32px);
   z-index: 100;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -1213,11 +1376,21 @@ textarea.field-control {
      iOS keyboard reduces available height. No max-height / overflow
      on the card itself, so iOS handles scroll-into-view cleanly. */
   margin: auto 0;
-  max-width: max(380px, 88.8cqi);
-  padding: max(var(--space-7), 11.21cqi) max(var(--space-5), 5.61cqi);
+  /* Anchor width + padding + gap to the viewport rather than the
+     .card-screen container behind us. In pillarbox mode the card is
+     constrained to the bg-image aspect ratio (~403px on a 1263×619
+     window); the dialog should ignore that and use the full screen.
+     vmin-clamped values also stop padding/gap from ballooning on
+     tall desktops while keeping the dialog readable on short
+     landscape windows. */
+  max-width: 540px; /* Chrome <79 fallback */
+  max-width: min(540px, calc(100vw - 32px));
+  padding: 32px 28px; /* Chrome <79 fallback */
+  padding: clamp(24px, 4.5vmin, 44px) clamp(20px, 4vmin, 36px);
   display: flex;
   flex-direction: column;
-  gap: max(var(--space-5), 5.61cqi);
+  gap: 20px; /* Chrome <79 fallback */
+  gap: clamp(16px, 3vmin, 28px);
   border-radius: var(--radius-lg);
   /* Override the sharp .surface defaults with a softer, more diffused
      shadow so the dialog reads as a floating object rather than a
@@ -1247,10 +1420,13 @@ textarea.field-control {
 
 .dialog-close {
   position: absolute;
-  top: max(var(--space-3), 2.80cqi);
-  right: max(var(--space-3), 2.80cqi);
-  width: max(40px, 9.35cqi);
-  height: max(40px, 9.35cqi);
+  top: 12px; /* Chrome <79 fallback */
+  top: clamp(12px, 2vmin, 20px);
+  right: 12px;
+  right: clamp(12px, 2vmin, 20px);
+  /* Fixed-size hit target — comfortable tap area on phone, not oversized on desktop. */
+  width: 40px;
+  height: 40px;
   border: none;
   background: transparent;
   color: var(--ink-3);
@@ -1264,8 +1440,8 @@ textarea.field-control {
 }
 
 .dialog-close svg {
-  width: max(18px, 4.21cqi);
-  height: max(18px, 4.21cqi);
+  width: 18px;
+  height: 18px;
 }
 
 .dialog-close:hover {
@@ -1281,7 +1457,8 @@ textarea.field-control {
 
 .dialog-title {
   margin: 0;
-  font-size: max(22px, 5.14cqi);
+  font-size: 22px; /* Chrome <79 fallback */
+  font-size: clamp(20px, 3vmin, 26px);
   font-weight: 500;
   letter-spacing: 0.02em;
   color: var(--ink);
@@ -1289,9 +1466,24 @@ textarea.field-control {
 
 .dialog-subtitle {
   margin: 0;
-  font-size: max(14px, 3.27cqi);
+  font-size: 14px; /* Chrome <79 fallback */
+  font-size: clamp(14px, 2vmin, 17px);
   line-height: 1.7;
   color: var(--ink-3);
+}
+
+/* Forces "發送給你。" onto its own line when the dialog is wide enough to
+   otherwise fit the whole subtitle on a single row. On narrow portrait
+   phones the line wraps naturally — adding our own break there would just
+   create awkward double-wrapping, so we suppress it. */
+.dialog-subtitle-break {
+  display: none;
+}
+
+@media (min-width: 480px) {
+  .dialog-subtitle-break {
+    display: initial;
+  }
 }
 
 .dialog-form {
@@ -1302,7 +1494,8 @@ textarea.field-control {
 /* Slightly larger radius + soft focus glow inside the dialog. */
 .dialog-card .field-control {
   border-radius: var(--radius-md);
-  padding: max(14px, 3.27cqi) max(16px, 3.74cqi);
+  padding: 14px 16px; /* Chrome <79 fallback */
+  padding: clamp(14px, 2vmin, 18px) clamp(16px, 2.2vmin, 20px);
   background: var(--paper);
   transition:
     border-color 200ms ease,
@@ -1328,7 +1521,8 @@ textarea.field-control {
 
 .dialog-privacy {
   margin: 0;
-  font-size: max(12px, 2.80cqi);
+  font-size: 12px; /* Chrome <79 fallback */
+  font-size: clamp(11px, 1.5vmin, 13px);
   letter-spacing: 0.04em;
   color: var(--ink-mute);
   line-height: 1.7;
@@ -1338,8 +1532,10 @@ textarea.field-control {
 /* Slightly tighter padding for dialog CTAs (the pill radius is global). */
 .dialog-card .btn-solid,
 .dialog-card .btn-outline {
-  padding: max(14px, 3.27cqi) max(32px, 7.48cqi);
-  font-size: max(13px, 3.04cqi);
+  padding: 14px 32px; /* Chrome <79 fallback */
+  padding: clamp(14px, 1.8vmin, 18px) clamp(32px, 4.5vmin, 44px);
+  font-size: 13px; /* Chrome <79 fallback */
+  font-size: clamp(13px, 1.7vmin, 15px);
   letter-spacing: 0.28em;
 }
 
@@ -1353,15 +1549,18 @@ textarea.field-control {
 }
 
 .dialog-card .kicker {
-  font-size: max(13px, 3.04cqi);
+  font-size: 13px; /* Chrome <79 fallback */
+  font-size: clamp(12px, 1.8vmin, 14px);
 }
 
 .dialog-card .field-label {
-  font-size: max(11px, 2.57cqi);
+  font-size: 11px; /* Chrome <79 fallback */
+  font-size: clamp(11px, 1.4vmin, 13px);
 }
 
 .dialog-card .banner {
-  font-size: max(13px, 3.04cqi);
+  font-size: 13px; /* Chrome <79 fallback */
+  font-size: clamp(13px, 1.7vmin, 15px);
 }
 
 .dialog-success {
@@ -1373,8 +1572,10 @@ textarea.field-control {
 
 .dialog-success-mark {
   margin: 0 auto;
-  width: max(64px, 14.95cqi);
-  height: max(64px, 14.95cqi);
+  /* Decorative checkmark — fixed footprint is appropriate; it doesn't
+     need to bloat on desktop or shrink on phones. */
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   border: 1px solid var(--gold);
   background: rgba(176, 141, 78, 0.08);
@@ -1384,13 +1585,14 @@ textarea.field-control {
 }
 
 .dialog-success-mark svg {
-  width: max(28px, 6.54cqi);
-  height: max(28px, 6.54cqi);
+  width: 28px;
+  height: 28px;
 }
 
 .dialog-success-text {
   margin: 0;
-  font-size: max(15px, 3.50cqi);
+  font-size: 15px; /* Chrome <79 fallback */
+  font-size: clamp(15px, 2vmin, 17px);
   line-height: 1.8;
   color: var(--ink-2);
 }
@@ -1399,7 +1601,8 @@ textarea.field-control {
   display: inline-block;
   margin-top: var(--space-2);
   font-family: 'Cormorant Garamond', serif;
-  font-size: max(17px, 3.97cqi);
+  font-size: 17px; /* Chrome <79 fallback */
+  font-size: clamp(17px, 2.3vmin, 20px);
   color: var(--gold-deep);
   letter-spacing: 0.04em;
 }

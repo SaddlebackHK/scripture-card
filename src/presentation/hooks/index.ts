@@ -6,3 +6,5 @@ export { useDevotional } from './useDevotional';
 export { useUpdateAvailable } from './useUpdateAvailable';
 export { useViewport } from './useViewport';
 export type { Viewport } from './useViewport';
+export { useLandingDate } from './useLandingDate';
+export type { LandingDate } from './useLandingDate';

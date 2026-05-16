@@ -1,14 +1,14 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MONTHS, daysInMonth, formatChineseMonth } from '@shared/date';
 import { DrumPicker, PageFooter, PageHeader } from '@presentation/components';
-import { useViewport } from '@presentation/hooks';
+import { useLandingDate, useViewport } from '@presentation/hooks';
 
 export const LandingPage = () => {
   const navigate = useNavigate();
-  const today = new Date();
-  const [month, setMonth] = useState<number>(today.getMonth() + 1);
-  const [requestedDay, setRequestedDay] = useState<number>(today.getDate());
+  // Date selection persists across in-app navigation (returning here from
+  // the card screen restores the user's last pick) but resets to today on
+  // a real browser refresh — the hook's cache lives in module state.
+  const { month, requestedDay, setMonth, setRequestedDay } = useLandingDate();
   const { width: vw, height: vh } = useViewport();
   const vmin = Math.min(vw, vh);
 

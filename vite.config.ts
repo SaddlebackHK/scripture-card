@@ -4,6 +4,7 @@ import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
+import legacy from '@vitejs/plugin-legacy';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const r = (segment: string) => path.resolve(dirname, segment);
@@ -39,7 +40,20 @@ const emitVersionFile = (): Plugin => ({
 });
 
 export default defineConfig({
-  plugins: [react(), emitVersionFile()],
+  plugins: [
+    react(),
+    // Emits a second, Babel-transpiled bundle for older browsers (Android Chrome
+    // 78, Safari < 14, etc.). Modern browsers continue to receive the fast
+    // type="module" build; older browsers get a nomodule fallback with the
+    // necessary syntax transforms (optional chaining, nullish coalescing,
+    // logical assignment, class fields…) plus core-js polyfills for runtime
+    // APIs missing from the target (Promise.any, Array.at, structuredClone…).
+    legacy({
+      targets: ['chrome >= 78', 'safari >= 13', 'firefox >= 78'],
+      modernPolyfills: true,
+    }),
+    emitVersionFile(),
+  ],
   define: {
     __APP_VERSION__: JSON.stringify(APP_VERSION),
   },
@@ -54,7 +68,9 @@ export default defineConfig({
   },
   build: {
     sourcemap: true,
-    target: 'es2022',
+    // Modern bundle still targets a sensible baseline; the legacy plugin emits
+    // the older bundle separately.
+    target: 'es2020',
   },
   test: {
     environment: 'jsdom',

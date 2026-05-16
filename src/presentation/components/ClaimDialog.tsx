@@ -115,7 +115,9 @@ const ClaimDialogContent = ({ month, day, dateLabel, onClose }: ClaimDialogProps
                 領取電子卡
               </h2>
               <p className="dialog-subtitle">
-                我們將把 <strong>{dateLabel}</strong> 的卡片高清電子版發送給你。
+                我們將把 <strong>{dateLabel}</strong> 的卡片高清電子版
+                <br className="dialog-subtitle-break" />
+                發送給你。
               </p>
             </header>
 
