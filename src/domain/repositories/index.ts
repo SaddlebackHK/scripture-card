@@ -1,1 +1,1 @@
-export type { ClaimRepository } from './ClaimRepository';
+export type { ClaimRepository, CreatedClaim } from './ClaimRepository';

@@ -25,6 +25,68 @@ service cloud.firestore {
       allow create: if validClaim();
     }
 
+    // Outbound mail queue for the Trigger Email extension. The extension
+    // (running as a privileged Cloud Function) reads + writes the delivery
+    // status fields server-side; the client only writes the initial doc.
+    //
+    // We pin every field the SubmitClaim use case sets — the template name,
+    // the attachment path prefix, the cid, and the data shape — so a hostile
+    // client can't repurpose this collection to send arbitrary emails.
+    // Even with these rules, the email body is rendered from a fixed
+    // server-side template (email-templates/scripture-card); user-supplied
+    // values are interpolated as Handlebars data and HTML-escaped by default.
+    match /mail/{mailId} {
+      function validMail() {
+        let data = request.resource.data;
+        let t = data.template;
+        let a = data.attachments[0];
+        return data.keys().hasOnly(['to', 'claimId', 'template', 'attachments', 'createdAt'])
+          && data.keys().hasAll(['to', 'claimId', 'template', 'attachments', 'createdAt'])
+          && data.to is string && data.to.size() >= 3 && data.to.size() <= 254
+          && data.to.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+          && data.claimId is string && data.claimId.size() > 0 && data.claimId.size() <= 64
+          && t is map
+          && t.keys().hasOnly(['name', 'data'])
+          && t.name == 'scripture-card'
+          && t.data is map
+          && t.data.keys().hasOnly(['name', 'dateLabel', 'month', 'day'])
+          && t.data.name is string && t.data.name.size() >= 1 && t.data.name.size() <= 60
+          && t.data.dateLabel is string && t.data.dateLabel.size() >= 1 && t.data.dateLabel.size() <= 16
+          && t.data.month is int && t.data.month >= 1 && t.data.month <= 12
+          && t.data.day is int && t.data.day >= 1 && t.data.day <= 31
+          && data.attachments is list && data.attachments.size() == 1
+          && a.keys().hasOnly(['filename', 'path', 'cid'])
+          && a.filename is string && a.filename.size() >= 1 && a.filename.size() <= 64
+          && a.path is string
+          && a.path.matches('^https://scripture-card\\.web\\.app/cards/(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])\\.png$')
+          && a.cid == 'cardImage'
+          && data.createdAt == request.time;
+      }
+
+      // The mail doc must reference a real claim whose email matches the
+      // recipient — otherwise an attacker could write a valid-shape mail doc
+      // with `to: <anyone>@anywhere.com` and use our SMTP to spam them.
+      function matchesClaim() {
+        let c = get(/databases/$(database)/documents/claims/$(request.resource.data.claimId)).data;
+        return c.email == request.resource.data.to
+          && c.month == request.resource.data.template.data.month
+          && c.day == request.resource.data.template.data.day;
+      }
+
+      allow create: if validMail() && matchesClaim();
+      // Reads + updates + deletes are owned by the extension's privileged
+      // service account, which bypasses these rules. Clients have no business
+      // reading the queue.
+    }
+
+    // The Trigger Email template lives in this collection. We allow clients
+    // (and the extension) to read it so the Handlebars rendering can resolve
+    // the template; nobody but a project admin should mutate it (do that via
+    // the Firebase console).
+    match /email-templates/{templateId} {
+      allow read: if true;
+    }
+
     // Default deny anything else.
     match /{document=**} {
       allow read, write: if false;

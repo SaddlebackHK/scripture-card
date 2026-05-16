@@ -9,7 +9,7 @@ import type { Result } from '@shared/result';
 import { err, ok } from '@shared/result';
 import type { DomainError } from '@domain/errors';
 import type { ClaimRequestProps } from '@domain/entities';
-import type { ClaimRepository } from '@domain/repositories';
+import type { ClaimRepository, CreatedClaim } from '@domain/repositories';
 import { mapFirestoreError } from '@infrastructure/firebase/errors';
 
 const COLLECTION = 'claims';
@@ -30,7 +30,7 @@ export class FirestoreClaimRepository implements ClaimRepository {
     this.db = db;
   }
 
-  async create(claim: ClaimRequestProps): Promise<Result<ClaimRequestProps, DomainError>> {
+  async create(claim: ClaimRequestProps): Promise<Result<CreatedClaim, DomainError>> {
     try {
       const ref = collection(this.db, COLLECTION);
       const payload: ClaimDoc = {
@@ -41,10 +41,10 @@ export class FirestoreClaimRepository implements ClaimRepository {
         day: claim.day,
         createdAt: serverTimestamp(),
       };
-      await addDoc(ref, payload);
+      const docRef = await addDoc(ref, payload);
       // Server timestamp resolves on the server; for the returned entity we keep
       // the local Date so the caller can echo it back to the user without a re-read.
-      return ok(claim);
+      return ok({ id: docRef.id, claim });
     } catch (error) {
       return err(mapFirestoreError(error));
     }

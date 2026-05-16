@@ -1786,3 +1786,14 @@ textarea.field-control {
     width: auto;
   }
 }
+
+/* In pillarbox mode the card-screen <main> floats inset from the viewport edges,
+   so a viewport-anchored toast lands in the empty margin below the card. Push it
+   up by the same vertical inset (mirroring .card-screen's --pillarbox-m) so it
+   sits inside the card. Horizontal centering already aligns with the card. */
+@media (min-aspect-ratio: 14872 / 21056) {
+  .update-toast {
+    bottom: 27px; /* Chrome <108 fallback: 24px pillarbox + ~space-1 */
+    bottom: calc(max(24px, 3dvh) + var(--space-3));
+  }
+}

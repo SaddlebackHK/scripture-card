@@ -15,7 +15,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "deploy": "npm run build && firebase deploy --only hosting,firestore:rules,firestore:indexes"
+    "cards": "node scripts/generate-card-images.mjs",
+    "seed:email": "node scripts/seed-email-template.mjs",
+    "deploy": "npm run build && npm run cards && firebase deploy --only hosting,firestore:rules,firestore:indexes"
   },
   "dependencies": {
     "firebase": "^12.12.1",
@@ -41,9 +43,11 @@
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
+    "firebase-admin": "^13.10.0",
     "globals": "^17.5.0",
     "jsdom": "^29.1.0",
     "prettier": "^3.8.3",
+    "puppeteer-core": "^25.0.2",
     "terser": "^5.47.1",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.2",

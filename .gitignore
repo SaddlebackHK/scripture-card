@@ -34,3 +34,6 @@ coverage
 firebase-debug.log
 firestore-debug.log
 .runtimeconfig.json
+# Service-account / Admin SDK private keys — must never be committed.
+*-firebase-adminsdk-*.json
+*service-account*.json

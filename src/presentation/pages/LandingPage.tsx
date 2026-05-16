@@ -1,9 +1,34 @@
 import { useNavigate } from 'react-router-dom';
+import { preload } from 'react-dom';
 import { MONTHS, daysInMonth, formatChineseMonth } from '@shared/date';
 import { DrumPicker, PageFooter, PageHeader } from '@presentation/components';
 import { useLandingDate, useViewport } from '@presentation/hooks';
+import cardBackground from '@presentation/assets/bg.png';
+
+// Chromium-only API. Safari / Firefox return undefined and we fall through
+// to preloading — matches their lack of a Data Saver mode anyway.
+type NetworkInformation = {
+  saveData?: boolean;
+  effectiveType?: 'slow-2g' | '2g' | '3g' | '4g';
+};
+
+const prefersLessData = (): boolean => {
+  const conn = (navigator as Navigator & { connection?: NetworkInformation }).connection;
+  if (!conn) return false;
+  if (conn.saveData === true) return true;
+  return conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g';
+};
 
 export const LandingPage = () => {
+  // Warm the browser HTTP cache for the card-screen background while the user
+  // is still picking a date. React 19 hoists this to <link rel="preload"> and
+  // dedupes per URL; the asset's content-hashed filename + the long-lived
+  // Cache-Control header on /assets/** mean subsequent visits hit the cache.
+  // Skip on Data Saver / 2G — those users opted out of speculative downloads.
+  if (!prefersLessData()) {
+    preload(cardBackground, { as: 'image' });
+  }
+
   const navigate = useNavigate();
   // Date selection persists across in-app navigation (returning here from
   // the card screen restores the user's last pick) but resets to today on
