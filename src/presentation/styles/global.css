@@ -1343,13 +1343,13 @@ textarea.field-control {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* Backdrop gutter scales with vmin (not the cqi of the pillarboxed
-     .card-screen behind it) so a wide-short laptop window doesn't get
-     a cramped dialog stamped into the narrow card pillar. The 20px
-     floor guarantees a visible top/bottom margin so the dialog never
-     crowds the viewport edge, even on the shortest landscape phones. */
-  padding: 24px; /* Chrome <79 fallback */
-  padding: clamp(20px, 3vmin, 36px);
+  /* Vertical gutter tracks viewport height (vh) — on short windows the
+     dialog still gets a visible top/bottom margin without stealing
+     room from the form. Horizontal stays vmin so wide laptop windows
+     don't blow out the side margins. The 20px vertical floor keeps
+     the dialog from ever crowding the viewport edge. */
+  padding: 20px 24px; /* Chrome <79 fallback */
+  padding: clamp(20px, 3vh, 36px) clamp(16px, 3vmin, 32px);
   z-index: 100;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -1382,11 +1382,12 @@ textarea.field-control {
      .card-screen container behind us. In pillarbox mode the card is
      constrained to the bg-image aspect ratio (~403px on a 1263×619
      window); the dialog should ignore that and use the full screen.
-     vmin-clamped values also stop padding/gap from ballooning on
-     tall desktops while keeping the dialog readable on short
-     landscape windows. */
-  max-width: 540px; /* Chrome <79 fallback */
-  max-width: min(540px, calc(100vw - 32px));
+     420px is sized so a typical 25-char email at 16px (~200px of text)
+     fills roughly two-thirds of the input — full enough to read as
+     balanced when typed, not so wide that the trailing whitespace
+     reads as "empty form". */
+  max-width: 420px; /* Chrome <79 fallback */
+  max-width: min(420px, calc(100vw - 32px));
   padding: 32px 28px; /* Chrome <79 fallback */
   padding: clamp(24px, 4.5vmin, 44px) clamp(20px, 4vmin, 36px);
   display: flex;
