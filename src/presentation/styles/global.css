@@ -1388,12 +1388,14 @@ textarea.field-control {
      reads as "empty form". */
   max-width: 420px; /* Chrome <79 fallback */
   max-width: min(420px, calc(100vw - 32px));
-  padding: 32px 28px; /* Chrome <79 fallback */
-  padding: clamp(24px, 4.5vmin, 44px) clamp(20px, 4vmin, 36px);
+  /* Vertical padding tracks vh — compresses on short landscape windows
+     so the form fits without scrolling; horizontal stays vmin. */
+  padding: 24px 28px; /* Chrome <79 fallback */
+  padding: clamp(18px, 3vh, 40px) clamp(20px, 4vmin, 36px);
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Chrome <79 fallback */
-  gap: clamp(16px, 3vmin, 28px);
+  gap: 16px; /* Chrome <79 fallback */
+  gap: clamp(12px, 2vh, 24px);
   border-radius: var(--radius-lg);
   /* Override the sharp .surface defaults with a softer, more diffused
      shadow so the dialog reads as a floating object rather than a
@@ -1486,14 +1488,32 @@ textarea.field-control {
 
 .dialog-form {
   display: grid;
-  gap: var(--space-4);
+  /* Tightens on short windows so all three fields + submit fit without
+     forcing a scroll on landscape laptops (e.g. 1263×619). */
+  gap: 14px; /* Chrome <79 fallback */
+  gap: clamp(10px, 1.6vh, 18px);
+}
+
+/* Tighter label↔input gap inside the dialog so the field stack stays
+   compact on short windows. The global .field rule (8px) is fine
+   elsewhere; here we want it height-aware. */
+.dialog-card .field {
+  gap: 6px; /* Chrome <79 fallback */
+  gap: clamp(4px, 0.8vh, 8px);
+}
+
+/* Same treatment for the kicker / title / subtitle gap. */
+.dialog-card .dialog-header {
+  gap: 6px; /* Chrome <79 fallback */
+  gap: clamp(4px, 0.8vh, 10px);
 }
 
 /* Slightly larger radius + soft focus glow inside the dialog. */
 .dialog-card .field-control {
   border-radius: var(--radius-md);
-  padding: 14px 16px; /* Chrome <79 fallback */
-  padding: clamp(14px, 2vmin, 18px) clamp(16px, 2.2vmin, 20px);
+  /* Vertical padding tracks vh so inputs shrink on short windows. */
+  padding: 12px 16px; /* Chrome <79 fallback */
+  padding: clamp(10px, 1.6vh, 16px) clamp(16px, 2.2vmin, 20px);
   background: var(--paper);
   transition:
     border-color 200ms ease,
@@ -1527,11 +1547,12 @@ textarea.field-control {
   text-align: center;
 }
 
-/* Slightly tighter padding for dialog CTAs (the pill radius is global). */
+/* Slightly tighter padding for dialog CTAs (the pill radius is global).
+   Vertical tracks vh so the button compresses with the rest of the form. */
 .dialog-card .btn-solid,
 .dialog-card .btn-outline {
-  padding: 14px 32px; /* Chrome <79 fallback */
-  padding: clamp(14px, 1.8vmin, 18px) clamp(32px, 4.5vmin, 44px);
+  padding: 12px 32px; /* Chrome <79 fallback */
+  padding: clamp(10px, 1.6vh, 16px) clamp(32px, 4.5vmin, 44px);
   font-size: 13px; /* Chrome <79 fallback */
   font-size: clamp(13px, 1.7vmin, 15px);
   letter-spacing: 0.28em;
