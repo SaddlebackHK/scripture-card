@@ -61,6 +61,8 @@ const claimRef = await db.collection('claims').add({
 });
 
 // Then enqueue the mail doc exactly the way the use case will.
+// Attachments must sit inside `message` — the Trigger Email extension reads
+// payload.message.attachments when constructing the Nodemailer message.
 const mailRef = await db.collection('mail').add({
   to,
   claimId: claimRef.id,
@@ -73,13 +75,15 @@ const mailRef = await db.collection('mail').add({
       day,
     },
   },
-  attachments: [
-    {
-      filename: `scripture-card-${filename}`,
-      path,
-      cid: 'cardImage',
-    },
-  ],
+  message: {
+    attachments: [
+      {
+        filename: `scripture-card-${filename}`,
+        path,
+        cid: 'cardImage',
+      },
+    ],
+  },
   createdAt: FieldValue.serverTimestamp(),
 });
 

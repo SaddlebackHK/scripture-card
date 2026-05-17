@@ -29,11 +29,16 @@ interface MailDoc {
       readonly day: number;
     };
   };
-  readonly attachments: ReadonlyArray<{
-    readonly filename: string;
-    readonly path: string;
-    readonly cid: string;
-  }>;
+  // Nodemailer / the Trigger Email extension reads attachments from
+  // message.attachments — top-level `attachments` is silently ignored,
+  // so the email ships without the inline image part.
+  readonly message: {
+    readonly attachments: ReadonlyArray<{
+      readonly filename: string;
+      readonly path: string;
+      readonly cid: string;
+    }>;
+  };
   readonly createdAt: ReturnType<typeof serverTimestamp>;
 }
 
@@ -60,13 +65,15 @@ export class FirestoreEmailQueue implements EmailQueue {
             day: input.day,
           },
         },
-        attachments: [
-          {
-            filename: `scripture-card-${filename}`,
-            path,
-            cid: 'cardImage',
-          },
-        ],
+        message: {
+          attachments: [
+            {
+              filename: `scripture-card-${filename}`,
+              path,
+              cid: 'cardImage',
+            },
+          ],
+        },
         createdAt: serverTimestamp(),
       };
       await addDoc(collection(this.db, COLLECTION), payload);
