@@ -8,8 +8,8 @@ import { mapFirestoreError } from '@infrastructure/firebase/errors';
 const COLLECTION = 'mail';
 const TEMPLATE_NAME = 'scripture-card';
 
-// Pre-generated PNGs are published by scripts/generate-card-images.mjs to
-// /cards/MM-DD.png under Firebase Hosting. The Trigger Email extension
+// Pre-generated JPEGs are published by scripts/generate-card-images.mjs to
+// /cards/MM-DD.jpg under Firebase Hosting. The Trigger Email extension
 // fetches this URL at send time and inlines the bytes via the `cid` ref.
 // Locking the prefix here (and matching it in firestore.rules) prevents a
 // malicious client from making the extension fetch arbitrary URLs.
@@ -51,7 +51,7 @@ export class FirestoreEmailQueue implements EmailQueue {
 
   async enqueueCardEmail(input: EnqueueCardEmailInput): Promise<Result<void, DomainError>> {
     try {
-      const filename = `${pad2(input.month)}-${pad2(input.day)}.png`;
+      const filename = `${pad2(input.month)}-${pad2(input.day)}.jpg`;
       const path = `${HOSTING_ORIGIN}/cards/${filename}`;
       const payload: MailDoc = {
         to: input.to,

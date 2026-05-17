@@ -1,5 +1,5 @@
-// Pre-generates a PNG of the pillarbox-card view for every valid (month, day)
-// that has devotional content, writing them into dist/cards/MM-DD.png so they
+// Pre-generates a JPEG of the pillarbox-card view for every valid (month, day)
+// that has devotional content, writing them into dist/cards/MM-DD.jpg so they
 // can be referenced by the Trigger Email extension as inline attachments.
 //
 // Run after `vite build` — this script spins up `vite preview` against the
@@ -146,14 +146,19 @@ async function main() {
           continue;
         }
 
-        const filename = `${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}.png`;
+        const filename = `${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}.jpg`;
         // Defensive: something on this machine occasionally removes dist/cards
         // mid-run (likely an indexer / IDE / file-watcher). Re-asserting the
         // directory before each write costs ~microseconds and avoids ENOENT.
         await mkdir(outDir, { recursive: true });
+        // JPEG at quality 88 is visually indistinguishable from lossless on the
+        // photographic background and produces ~400 KB files instead of the
+        // ~3.5 MB PNGs that DSF=3 was emitting. Smaller inline attachments mean
+        // faster delivery, less mailbox bloat, and lower Hosting egress cost.
         await page.screenshot({
           path: resolve(outDir, filename),
-          type: 'png',
+          type: 'jpeg',
+          quality: 88,
           clip: {
             x: Math.max(0, Math.floor(box.x - SHADOW_PADDING)),
             y: Math.max(0, Math.floor(box.y - SHADOW_PADDING)),

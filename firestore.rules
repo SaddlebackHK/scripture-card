@@ -39,9 +39,15 @@ service cloud.firestore {
       function validMail() {
         let data = request.resource.data;
         let t = data.template;
-        let a = data.attachments[0];
-        return data.keys().hasOnly(['to', 'claimId', 'template', 'attachments', 'createdAt'])
-          && data.keys().hasAll(['to', 'claimId', 'template', 'attachments', 'createdAt'])
+        // Attachments live under `message` because Nodemailer (which the
+        // Trigger Email extension drives) only reads `message.attachments`.
+        // Pinning `message` to *exactly* {attachments} also prevents a
+        // hostile client from injecting `message.html` / `message.text` to
+        // bypass the fixed server-side template.
+        let m = data.message;
+        let a = m.attachments[0];
+        return data.keys().hasOnly(['to', 'claimId', 'template', 'message', 'createdAt'])
+          && data.keys().hasAll(['to', 'claimId', 'template', 'message', 'createdAt'])
           && data.to is string && data.to.size() >= 3 && data.to.size() <= 254
           && data.to.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
           && data.claimId is string && data.claimId.size() > 0 && data.claimId.size() <= 64
@@ -54,11 +60,13 @@ service cloud.firestore {
           && t.data.dateLabel is string && t.data.dateLabel.size() >= 1 && t.data.dateLabel.size() <= 16
           && t.data.month is int && t.data.month >= 1 && t.data.month <= 12
           && t.data.day is int && t.data.day >= 1 && t.data.day <= 31
-          && data.attachments is list && data.attachments.size() == 1
+          && m is map
+          && m.keys().hasOnly(['attachments'])
+          && m.attachments is list && m.attachments.size() == 1
           && a.keys().hasOnly(['filename', 'path', 'cid'])
           && a.filename is string && a.filename.size() >= 1 && a.filename.size() <= 64
           && a.path is string
-          && a.path.matches('^https://scripture-card\\.web\\.app/cards/(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])\\.png$')
+          && a.path.matches('^https://scripture-card\\.web\\.app/cards/(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])\\.jpg$')
           && a.cid == 'cardImage'
           && data.createdAt == request.time;
       }

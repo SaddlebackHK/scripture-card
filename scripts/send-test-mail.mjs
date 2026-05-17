@@ -30,7 +30,7 @@ const month = Number(process.argv[2] ?? today.getMonth() + 1);
 const day = Number(process.argv[3] ?? today.getDate());
 
 const pad2 = (n) => String(n).padStart(2, '0');
-const filename = `${pad2(month)}-${pad2(day)}.png`;
+const filename = `${pad2(month)}-${pad2(day)}.jpg`;
 const path = `${HOSTING_ORIGIN}/cards/${filename}`;
 
 // Match the zh-Hant date label the app uses (e.g. 五月十六日). Kept inline
