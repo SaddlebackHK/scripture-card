@@ -26,7 +26,12 @@ const CHROME_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrom
 // 1400×900 forces pillarbox mode (viewport AR ≈ 1.56 > image AR 0.71). The
 // card lands at ~635px wide, ~852px tall, centered. We grab the card-screen
 // bounding box + a small padding so the drop shadow renders into the screenshot.
-const VIEWPORT = { width: 1400, height: 900, deviceScaleFactor: 1 };
+// deviceScaleFactor=3 renders the screenshot at 3× device pixels per CSS pixel,
+// so the served PNG is ~2080×2820 — crisp when Gmail displays at width=500 on
+// a retina (2×/3×) display. At DSF=1 the PNG was ~694px wide and got soft on
+// up-sampling. PNG is lossless so the file grows ~9× in pixel count but the
+// resulting size (~3–5 MB) is well under any mail provider's attachment cap.
+const VIEWPORT = { width: 1400, height: 900, deviceScaleFactor: 3 };
 const SHADOW_PADDING = 48;
 
 const daysInMonth = (month) => new Date(2024, month, 0).getDate(); // 2024 is leap year — yields 29 for Feb
