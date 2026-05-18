@@ -143,20 +143,21 @@ body::before {
   mix-blend-mode: screen;
 }
 
-/* Hairline gold accent — pinned to the top edge of the viewport at exactly
-   the 960×484 test viewport. Pure decoration: 1px gold rule echoing the
-   .gold-rule design token, sitting above page chrome via z-index. Both the
-   Landing and Card pages render under <body>, so this applies to both. */
+/* Hairline gold accent — pinned to the inner top edge of .card-screen-content
+   at exactly the 960×484 test viewport. Pure decoration: 1px gold rule echoing
+   the .gold-rule design token. Anchored to .card-screen-content (which is
+   already position: relative), so it sits inside the card's own coordinate
+   space rather than the viewport — visually framing the top of the verse
+   composition. Card page only; .card-screen-content doesn't exist on Landing. */
 @media (width: 960px) and (height: 484px) {
-  body::after {
+  .card-screen-content::before {
     content: '';
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: 1px;
     background: var(--gold);
-    z-index: 1000;
     pointer-events: none;
   }
 }
